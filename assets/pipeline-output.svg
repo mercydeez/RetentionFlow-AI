@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <style>
+      .title { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #e5e7eb; }
+      .label { font: 600 18px 'Consolas', 'Courier New', monospace; fill: #93c5fd; }
+      .line { font: 400 18px 'Consolas', 'Courier New', monospace; fill: #d1d5db; }
+      .ok { fill: #86efac; font-weight: 700; }
+      .arrow { fill: #fca5a5; font: 700 22px 'Segoe UI', Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="360" rx="18" fill="url(#bg)" />
+  <rect x="24" y="24" width="1152" height="312" rx="14" fill="#0b1220" stroke="#334155" stroke-width="2" />
+
+  <text x="46" y="58" class="title">Pipeline Snapshot: Customer -&gt; Prediction -&gt; Generated Email</text>
+
+  <text x="46" y="100" class="label">&gt; python src/pipeline.py</text>
+
+  <text x="46" y="142" class="line">Customer 2 input_data: {"purchases_last_month":2,"days_since_last_login":10,"avg_spend":45.0,"complaints_count":2}</text>
+  <text x="46" y="176" class="line">churn_probability: 0.5501</text>
+  <text x="370" y="176" class="arrow">-&gt;</text>
+  <text x="410" y="176" class="line">churn_segment: medium</text>
+  <text x="680" y="176" class="arrow">-&gt;</text>
+  <text x="720" y="176" class="line">subject: A Special Offer to Keep You Moving Forward</text>
+
+  <text x="46" y="214" class="line">email_body: We appreciate your recent purchases and want to make your next one even better.</text>
+  <text x="46" y="248" class="line">fallback_used: false</text>
+  <text x="250" y="248" class="ok">llm_success: true</text>
+
+  <text x="46" y="296" class="line">logs saved to logs/pipeline.log</text>
+</svg>
