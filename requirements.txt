@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.2
+scikit-learn>=1.4
+joblib>=1.4
+openai>=1.75
+python-dotenv>=1.0
+matplotlib>=3.8
