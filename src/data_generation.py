@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -7,40 +8,45 @@ DATA_PATH = PROJECT_ROOT / "data" / "customers.csv"
 
 
 def generate_synthetic_data() -> pd.DataFrame:
-    data = [
-        {"purchases_last_month": 1, "days_since_last_login": 45, "avg_spend": 28.5, "complaints_count": 4, "churn": 1},
-        {"purchases_last_month": 8, "days_since_last_login": 5, "avg_spend": 92.0, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 3, "days_since_last_login": 30, "avg_spend": 41.8, "complaints_count": 2, "churn": 1},
-        {"purchases_last_month": 11, "days_since_last_login": 2, "avg_spend": 135.4, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 6, "days_since_last_login": 10, "avg_spend": 76.2, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 0, "days_since_last_login": 60, "avg_spend": 19.9, "complaints_count": 5, "churn": 1},
-        {"purchases_last_month": 2, "days_since_last_login": 37, "avg_spend": 33.7, "complaints_count": 3, "churn": 1},
-        {"purchases_last_month": 9, "days_since_last_login": 6, "avg_spend": 101.6, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 4, "days_since_last_login": 22, "avg_spend": 58.1, "complaints_count": 2, "churn": 0},
-        {"purchases_last_month": 1, "days_since_last_login": 50, "avg_spend": 24.4, "complaints_count": 4, "churn": 1},
-        {"purchases_last_month": 12, "days_since_last_login": 1, "avg_spend": 168.0, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 5, "days_since_last_login": 18, "avg_spend": 69.5, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 2, "days_since_last_login": 33, "avg_spend": 39.2, "complaints_count": 3, "churn": 1},
-        {"purchases_last_month": 7, "days_since_last_login": 9, "avg_spend": 84.8, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 3, "days_since_last_login": 27, "avg_spend": 47.3, "complaints_count": 2, "churn": 1},
-        {"purchases_last_month": 10, "days_since_last_login": 4, "avg_spend": 122.9, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 6, "days_since_last_login": 14, "avg_spend": 79.0, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 1, "days_since_last_login": 42, "avg_spend": 26.8, "complaints_count": 5, "churn": 1},
-        {"purchases_last_month": 8, "days_since_last_login": 7, "avg_spend": 96.7, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 4, "days_since_last_login": 24, "avg_spend": 55.4, "complaints_count": 2, "churn": 0},
-        {"purchases_last_month": 0, "days_since_last_login": 55, "avg_spend": 17.5, "complaints_count": 6, "churn": 1},
-        {"purchases_last_month": 9, "days_since_last_login": 3, "avg_spend": 110.1, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 2, "days_since_last_login": 35, "avg_spend": 36.0, "complaints_count": 3, "churn": 1},
-        {"purchases_last_month": 7, "days_since_last_login": 11, "avg_spend": 88.9, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 5, "days_since_last_login": 16, "avg_spend": 72.4, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 1, "days_since_last_login": 47, "avg_spend": 22.6, "complaints_count": 4, "churn": 1},
-        {"purchases_last_month": 11, "days_since_last_login": 2, "avg_spend": 142.3, "complaints_count": 0, "churn": 0},
-        {"purchases_last_month": 3, "days_since_last_login": 29, "avg_spend": 44.7, "complaints_count": 2, "churn": 1},
-        {"purchases_last_month": 6, "days_since_last_login": 12, "avg_spend": 81.5, "complaints_count": 1, "churn": 0},
-        {"purchases_last_month": 2, "days_since_last_login": 40, "avg_spend": 31.4, "complaints_count": 3, "churn": 1},
-    ]
+    rng = np.random.default_rng(42)
+    n_rows = 600
 
-    df = pd.DataFrame(data)
+    purchases_last_month = rng.poisson(lam=4.5, size=n_rows)
+    purchases_last_month = np.clip(purchases_last_month, 0, 18)
+
+    days_since_last_login = rng.gamma(shape=2.0, scale=8.0, size=n_rows)
+    days_since_last_login = np.clip(days_since_last_login, 0, 90)
+
+    avg_spend = rng.normal(loc=72.0, scale=28.0, size=n_rows)
+    avg_spend = np.clip(avg_spend, 8.0, 260.0)
+
+    complaints_count = rng.poisson(lam=1.1, size=n_rows)
+    complaints_count = np.clip(complaints_count, 0, 8)
+
+    logit = (
+        1.2
+        - 0.30 * purchases_last_month
+        + 0.05 * days_since_last_login
+        - 0.012 * avg_spend
+        + 0.42 * complaints_count
+        + rng.normal(0.0, 0.9, size=n_rows)
+    )
+    churn_prob = 1.0 / (1.0 + np.exp(-logit))
+    churn = rng.binomial(1, churn_prob, size=n_rows)
+
+    # Flip a small portion of labels to keep the task realistic and non-separable.
+    noise_mask = rng.random(n_rows) < 0.06
+    churn = np.where(noise_mask, 1 - churn, churn)
+
+    df = pd.DataFrame(
+        {
+            "purchases_last_month": purchases_last_month.astype(int),
+            "days_since_last_login": np.round(days_since_last_login, 1),
+            "avg_spend": np.round(avg_spend, 2),
+            "complaints_count": complaints_count.astype(int),
+            "churn": churn.astype(int),
+        }
+    )
     return df
 
 

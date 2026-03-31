@@ -16,7 +16,7 @@ FEATURE_COLUMNS = [
 ]
 
 
-def categorize_churn_risk(churn_probability: float) -> str:
+def categorize_churn_segment(churn_probability: float) -> str:
     if churn_probability < 0.4:
         return "low"
     if churn_probability < 0.7:
@@ -41,9 +41,9 @@ def predict_churn(customer_dict: dict[str, Any]) -> tuple[float, str]:
     input_df = pd.DataFrame([{key: customer_dict[key] for key in FEATURE_COLUMNS}])
 
     churn_probability = float(model.predict_proba(input_df)[0, 1])
-    churn_risk = categorize_churn_risk(churn_probability)
+    churn_segment = categorize_churn_segment(churn_probability)
 
-    return churn_probability, churn_risk
+    return churn_probability, churn_segment
 
 
 def main() -> None:
@@ -66,10 +66,10 @@ def main() -> None:
             "complaints_count": 3,
         }
 
-    probability, risk = predict_churn(payload)
+    probability, churn_segment = predict_churn(payload)
     print("Input:", payload)
     print(f"Churn Probability: {probability:.4f}")
-    print("Risk Segment:", risk)
+    print("Churn Segment:", churn_segment)
 
 
 if __name__ == "__main__":
