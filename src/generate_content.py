@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from typing import Any
 
 from openai import NotFoundError, OpenAI
@@ -119,20 +120,46 @@ def generate_marketing_message(
     client, selected_model, provider = _get_client_and_model(model)
 
     def _create_chat_completion(selected_model_name: str) -> Any:
-        return client.chat.completions.create(
-            model=selected_model_name,
-            messages=[
+        request_payload = {
+            "model": selected_model_name,
+            "messages": [
                 {
                     "role": "system",
                     "content": "You are an expert e-commerce marketing copywriter.",
                 },
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.7,
-        )
+            "temperature": 0.7,
+        }
+
+        # Prefer structured JSON output when provider/model supports it.
+        try:
+            return client.chat.completions.create(
+                **request_payload,
+                response_format={"type": "json_object"},
+            )
+        except Exception:
+            return client.chat.completions.create(**request_payload)
+
+    def _extract_json_text(raw_text: str) -> str:
+        text = raw_text.strip()
+
+        # Handle fenced markdown output like ```json ... ```.
+        fenced_match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
+        if fenced_match:
+            return fenced_match.group(1).strip()
+
+        # Handle extra prose around a JSON object.
+        start = text.find("{")
+        end = text.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            return text[start : end + 1].strip()
+
+        return text
 
     def _parse_message_json(raw_text: str) -> dict[str, Any]:
-        parsed = json.loads(raw_text)
+        json_text = _extract_json_text(raw_text)
+        parsed = json.loads(json_text)
         subject = str(parsed.get("subject", "")).strip()
         email_body = str(parsed.get("email_body", "")).strip()
         if not subject or not email_body:

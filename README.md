@@ -105,6 +105,8 @@ These metrics demonstrate model performance beyond accuracy, with emphasis on ha
 - data/customers.csv: Synthetic churn dataset
 - models/churn_model.pkl: Trained classification model
 - logs/pipeline.log: Runtime pipeline logs
+- outputs/results.csv: Generated customer-level prediction and messaging output (created at runtime)
+- outputs/summary.json: Generated aggregate pipeline summary (created at runtime)
 - src/data_generation.py: Synthetic data creation
 - src/train_model.py: Model training, advanced metrics, and ROC data
 - src/predict.py: Probability estimation and segment assignment
@@ -137,6 +139,15 @@ Run full pipeline:
 ```bash
 python src/pipeline.py
 ```
+
+Run pipeline on first N customers:
+```bash
+python src/pipeline.py --limit 10
+```
+
+After running pipeline:
+- customer-level results are saved to `outputs/results.csv`
+- summary analytics are saved to `outputs/summary.json`
 
 ## Limitations
 - Uses synthetic dataset
