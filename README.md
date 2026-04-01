@@ -100,7 +100,7 @@ Generated Email:
 - Confusion Matrix
 
 Evaluation is performed on synthetic data and serves as a functional demonstration.
-Current results are measured on a tiny synthetic dataset and should not be interpreted as production-grade performance.
+Current results are measured on synthetic data and should not be interpreted as production-grade performance.
 These metrics demonstrate model performance beyond accuracy, with emphasis on handling class imbalance and decision quality using F1 Score and ROC-AUC.
 
 ## Project Structure
