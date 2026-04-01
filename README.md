@@ -29,13 +29,15 @@ The result is an actionable system that turns model output into business communi
 python src/pipeline.py
 ```
 
+Processes customer data -> predicts churn -> generates personalized emails -> saves results to CSV + summary JSON
+
 ### Pipeline Output Snapshot
 ![Pipeline Output Snapshot](assets/pipeline-output.svg)
 
 Example Output:
 - churn_probability: 0.78
 - churn_segment: high
-- subject: We Miss You - Here’s 15% Off Your Next Order
+- subject: We Miss You — Here’s 15% Off Your Next Order
 
 ## Key Features
 - Churn prediction using Logistic Regression
