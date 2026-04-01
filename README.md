@@ -52,6 +52,13 @@ Prediction alone is not enough because risk scores do not directly influence cus
 Generative AI alone is not enough because content without decision logic can be sent to the wrong users at the wrong time.
 By combining both, this system creates stronger business value: identify who is at risk, tailor what to say, and deliver consistent output with fail-safe handling.
 
+## AI/Data Role Relevance (ATS)
+- Target Roles: Machine Learning Engineer, Data Scientist, Applied AI Engineer, AI Product Engineer, Marketing Data Scientist
+- Core Skills Demonstrated: feature engineering, supervised learning, probabilistic classification, model evaluation, prompt engineering, API integration, fallback strategy design, experiment-ready pipeline design
+- Production-Oriented Skills: logging and observability, dependency pinning for reproducibility, modular architecture, output validation, failure handling
+- Business Analytics Skills: customer segmentation, retention strategy mapping, intervention recommendation generation, KPI-oriented output artifacts
+- Deliverables Recruiters Can Review: trained model artifact, reproducible pipeline, notebook workflow, structured CSV outputs, summary analytics JSON, architecture documentation
+
 ## Architecture
 ```mermaid
 flowchart LR
@@ -172,6 +179,9 @@ After running pipeline:
 
 ## ⭐ If You Found This Useful
 Consider giving this repository a star ⭐ to support the project.
+
+## License
+This project is licensed under the MIT License. See LICENSE for details.
 
 ## 👤 Author
 **Atharva Soundankar**  
